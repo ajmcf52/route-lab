@@ -1,25 +1,42 @@
-export default function MapCanvas() {
-    return (
-        <svg
-        viewBox="0 0 750 500"
-        width={750}
-        height={500}
-        style={{border: '1px solid gray'}}>
-        
-        <rect 
-        x={150}
-        y={150}
-        width={200}
-        height={100}
-        fill="steelblue"/>
+import type { MapData } from "../types/map";
 
-        <circle
-        cx={550}
-        cy={350}
-        r={100}
-        fill="red"
-        />
+type MapCanvasProps = {
+	map: MapData;
+};
 
-        </svg>
-    );
+export default function MapCanvas({ map }: MapCanvasProps) {
+	return (
+		<svg
+			viewBox={`0 0 ${map.width} ${map.height}`}
+			width={map.width}
+			height={map.height}
+			style={{ border: "1px solid gray" }}
+		>
+			{map.obstacles.map((obstacle) => {
+				switch (obstacle.type) {
+					case "circle":
+						return (
+							<circle
+								r={obstacle.radius}
+								cx={obstacle.cx}
+								cy={obstacle.cy}
+								key={obstacle.id}
+							/>
+						);
+					case "rectangle":
+						return (
+							<rect
+								x={obstacle.x}
+								y={obstacle.y}
+								width={obstacle.width}
+								height={obstacle.height}
+								key={obstacle.id}
+							/>
+						);
+					default:
+						return <>Invalid option</>;
+				}
+			})}
+		</svg>
+	);
 }
