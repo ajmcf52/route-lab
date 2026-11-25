@@ -15,11 +15,14 @@ export default function MapEditor() {
 		obstacles: [],
 	}));
 
+	const [selectedId, setSelectedId] = useState<string | null>(null);
+
 	function clearMap(): void {
 		setMap((previous) => ({
 			...previous,
 			obstacles: [],
 		}));
+		setSelectedId(null);
 	}
 
 	function addCircle(): void {
@@ -31,7 +34,7 @@ export default function MapEditor() {
 	}
 
 	function addRectangle(): void {
-		const rectangle = createRectangle(100, 100, 125, 80);
+		const rectangle = createRectangle(350, 250, 125, 80);
 		setMap((previous) => ({
 			...previous,
 			obstacles: [...previous.obstacles, rectangle],
@@ -45,7 +48,11 @@ export default function MapEditor() {
 				onAddCircle={addCircle}
 				onClearMap={clearMap}
 			/>
-			<MapCanvas map={map} />
+			<MapCanvas
+				map={map}
+				selectedId={selectedId}
+				onSelectObstacle={setSelectedId}
+			/>
 		</div>
 	);
 }
