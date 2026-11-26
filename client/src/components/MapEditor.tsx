@@ -17,6 +17,31 @@ export default function MapEditor() {
 
 	const [selectedId, setSelectedId] = useState<string | null>(null);
 
+	function moveObstacle(id: string, x: number, y: number): void {
+		const updatedMap = map.obstacles.map((obstacle) => {
+			if (obstacle.id !== id) return obstacle;
+
+			if (obstacle.type === "rectangle") {
+				return {
+					...obstacle,
+					x: x,
+					y: y,
+				};
+			} else {
+				return {
+					...obstacle,
+					cx: x,
+					cy: y,
+				};
+			}
+		});
+
+		setMap((previous) => ({
+			...previous,
+			obstacles: updatedMap,
+		}));
+	}
+
 	function clearMap(): void {
 		setMap((previous) => ({
 			...previous,
@@ -52,6 +77,7 @@ export default function MapEditor() {
 				map={map}
 				selectedId={selectedId}
 				onSelectObstacle={setSelectedId}
+				onMoveObstacle={moveObstacle}
 			/>
 		</div>
 	);
