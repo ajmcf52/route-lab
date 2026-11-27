@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { MapData } from "../types/map.ts";
 import { createCircle, createRectangle } from "../utils/geometry.ts";
 import Toolbar from "./Toolbar.tsx";
+import type { ResizeDimensions } from "../types/geometry.ts";
 
 export default function MapEditor() {
 	const [map, setMap] = useState<MapData>(() => ({
@@ -32,6 +33,31 @@ export default function MapEditor() {
 					...obstacle,
 					cx: x,
 					cy: y,
+				};
+			}
+		});
+
+		setMap((previous) => ({
+			...previous,
+			obstacles: updatedMap,
+		}));
+	}
+
+	function resizeObstacle(id: string, dimensions: ResizeDimensions): void {
+		const updatedMap = map.obstacles.map((obstacle) => {
+			if (obstacle.id !== id) return obstacle;
+			if (obstacle.type !== dimensions.type) return obstacle;
+
+			if (dimensions.type === "rectangle") {
+				return {
+					...obstacle,
+					width: dimensions.width,
+					height: dimensions.height,
+				};
+			} else {
+				return {
+					...obstacle,
+					radius: dimensions.radius,
 				};
 			}
 		});
@@ -78,6 +104,7 @@ export default function MapEditor() {
 				selectedId={selectedId}
 				onSelectObstacle={setSelectedId}
 				onMoveObstacle={moveObstacle}
+				onResizeObstacle={resizeObstacle}
 			/>
 		</div>
 	);
